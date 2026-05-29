@@ -1,0 +1,12 @@
+---
+import ServiceDetailPage from "../../components/ServiceDetailPage.astro";
+import { getServiceBySlug } from "../../lib/services";
+
+const service = getServiceBySlug("company-registration")!;
+---
+
+<ServiceDetailPage
+  service={service}
+  seoTitle="Company Registration in Bangalore — Pvt Ltd, LLP, OPC"
+  seoDescription="Register your Pvt Ltd, LLP, OPC, Partnership, or Proprietorship in Bangalore. End-to-end incorporation by ICAI-registered Chartered Accountants."
+/>

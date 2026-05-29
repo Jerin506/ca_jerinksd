@@ -1,0 +1,12 @@
+---
+import ServiceDetailPage from "../../components/ServiceDetailPage.astro";
+import { getServiceBySlug } from "../../lib/services";
+
+const service = getServiceBySlug("income-tax-consulting")!;
+---
+
+<ServiceDetailPage
+  service={service}
+  seoTitle="Income Tax Consulting & ITR Filing in Bangalore"
+  seoDescription="Tax planning, ITR preparation (ITR-1 to ITR-7), advance tax computation, and representation before the Income Tax Department. CA firm in Bangalore."
+/>

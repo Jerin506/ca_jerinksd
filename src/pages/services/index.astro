@@ -1,0 +1,66 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import CTABand from "../../components/CTABand.astro";
+import { BUSINESS } from "../../lib/business";
+import { SERVICES } from "../../lib/services";
+import { getBreadcrumbJsonLd } from "../../lib/seo";
+
+const title = "CA Services in Bangalore — Audit, GST, ITR, Company Registration";
+const description = "Explore our chartered accountancy services: statutory audits, GST compliance, income tax consulting, and company registration. ICAI-registered CA firm in Bangalore.";
+const breadcrumbLd = getBreadcrumbJsonLd([
+  { name: "Home", url: BUSINESS.urls.site },
+  { name: "Services", url: `${BUSINESS.urls.site}/services/` },
+]);
+
+const serviceIcons: Record<string, string> = {
+  ShieldCheck: '<svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>',
+  Building2: '<svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3H21m-3.75 3H21"/></svg>',
+  ReceiptText: '<svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>',
+  Calculator: '<svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V13.5zm0 2.25h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V18zm2.498-6.75h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V13.5zm0 2.25h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V18zm2.504-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zm2.498-6.75h.008v.008h-.008v-.008zM8.25 6h7.5v2.25h-7.5V6zM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 002.25 2.25h10.5a2.25 2.25 0 002.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0012 2.25z"/></svg>',
+};
+---
+
+<BaseLayout title={title} description={description} jsonLd={[breadcrumbLd]}>
+  <section class="bg-gradient-to-br from-white via-[var(--color-bg-muted)] to-[var(--color-primary-light)] section-padding">
+    <div class="container-site">
+      <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-[var(--color-text)] mb-4">Our Services</h1>
+      <p class="text-lg text-[var(--color-text-muted)] max-w-2xl">Comprehensive financial and legal services tailored for individuals and businesses in Bangalore. Every engagement is led by a qualified Chartered Accountant.</p>
+    </div>
+  </section>
+
+  <section class="section-padding bg-white">
+    <div class="container-site">
+      <div class="space-y-6">
+        {SERVICES.map((service) => (
+          <a href={`/services/${service.slug}/`} class="service-card block bg-white rounded-2xl border border-[var(--color-border)] p-6 lg:p-8 group overflow-hidden">
+            <div class="flex flex-col md:flex-row gap-6 items-start">
+              <img src={service.image} alt={service.title} class="w-full md:w-40 lg:w-48 h-auto rounded-xl object-cover shrink-0" width="192" height="192" loading="lazy" />
+              <div class="flex-1">
+                <div class="flex items-center gap-3 mb-2">
+                  <div class="w-10 h-10 rounded-lg bg-[var(--color-primary-light)] flex items-center justify-center text-[var(--color-primary)] group-hover:bg-[var(--color-primary)] group-hover:text-white transition-colors shrink-0">
+                    <Fragment set:html={serviceIcons[service.icon] || ""} />
+                  </div>
+                  <h2 class="text-xl font-bold text-[var(--color-text)] group-hover:text-[var(--color-primary)] transition-colors">{service.title}</h2>
+                </div>
+                <p class="text-sm text-[var(--color-text-muted)] mb-4">{service.subtitle}</p>
+                <ul class="space-y-1.5 mb-4">
+                  {service.deliverables.slice(0, 4).map((d) => (
+                    <li class="flex items-start gap-2 text-sm text-[var(--color-text-muted)]">
+                      <svg class="w-4 h-4 text-[var(--color-accent)] mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                      {d}
+                    </li>
+                  ))}
+                </ul>
+                <span class="text-sm font-semibold text-[var(--color-primary)] inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+                  Learn more <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                </span>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CTABand heading="Not sure which service you need?" message="Hello, I need your services" />
+</BaseLayout>

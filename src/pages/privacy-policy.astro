@@ -1,0 +1,44 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { BUSINESS } from "../lib/business";
+
+const title = "Privacy Policy | Jerin Kurian & Associates";
+const description = "Privacy policy for Jerin Kurian & Associates, Chartered Accountants in Bangalore.";
+---
+
+<!-- LEGAL REVIEW REQUIRED before launch -->
+<BaseLayout title={title} description={description}>
+  <section class="section-padding bg-white">
+    <div class="container-site max-w-3xl">
+      <h1 class="text-3xl md:text-4xl font-bold text-[var(--color-text)] mb-8">Privacy Policy</h1>
+
+      <!-- TODO: This is a boilerplate privacy policy. The firm's lawyer should review and customize before launch. -->
+      <div class="prose prose-sm max-w-none text-[var(--color-text-muted)] space-y-6">
+        <p class="text-sm text-[var(--color-text-muted)] italic bg-amber-50 border border-amber-200 rounded-lg p-4">⚠️ This is a placeholder privacy policy. It must be reviewed and customized by a legal professional before the website goes live.</p>
+
+        <h2 class="text-xl font-bold text-[var(--color-text)] mt-8 mb-3">1. Information We Collect</h2>
+        <p>When you contact us via WhatsApp or phone, we may collect your name, phone number, and details about the services you're interested in. We do not collect information through web forms, cookies for tracking, or third-party analytics unless explicitly configured.</p>
+
+        <h2 class="text-xl font-bold text-[var(--color-text)] mt-8 mb-3">2. How We Use Your Information</h2>
+        <p>We use the information you provide solely to respond to your inquiries, provide the professional services you request, and communicate with you about your engagement with our firm.</p>
+
+        <h2 class="text-xl font-bold text-[var(--color-text)] mt-8 mb-3">3. Information Sharing</h2>
+        <p>We do not sell, trade, or share your personal information with third parties, except as required by law or regulation, or with your explicit consent.</p>
+
+        <h2 class="text-xl font-bold text-[var(--color-text)] mt-8 mb-3">4. Data Security</h2>
+        <p>We take reasonable measures to protect your personal information. However, no method of transmission over the internet or electronic storage is 100% secure.</p>
+
+        <h2 class="text-xl font-bold text-[var(--color-text)] mt-8 mb-3">5. Third-Party Links</h2>
+        <p>This website contains links to WhatsApp and Google Maps. These services have their own privacy policies, which we encourage you to review.</p>
+
+        <h2 class="text-xl font-bold text-[var(--color-text)] mt-8 mb-3">6. Changes to This Policy</h2>
+        <p>We may update this privacy policy from time to time. Any changes will be posted on this page.</p>
+
+        <h2 class="text-xl font-bold text-[var(--color-text)] mt-8 mb-3">7. Contact</h2>
+        <p>If you have questions about this privacy policy, contact us at <a href={`https://wa.me/${BUSINESS.phone.whatsapp}`} class="text-[var(--color-primary)] hover:underline">{BUSINESS.phone.display}</a>.</p>
+
+        <p class="text-xs text-[var(--color-text-muted)] mt-8">Last updated: {new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

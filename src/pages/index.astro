@@ -1,11 +1,218 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ServiceCard from "../components/ServiceCard.astro";
+import WhatsAppCTA from "../components/WhatsAppCTA.astro";
+import MapEmbed from "../components/MapEmbed.astro";
+import CTABand from "../components/CTABand.astro";
+import { BUSINESS } from "../lib/business";
+import { SERVICES } from "../lib/services";
+import { waLink } from "../lib/whatsapp";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const title = "Chartered Accountants in Bangalore | Jerin Kurian & Associates";
+const description = "ICAI-registered CA firm in Bangalore. Audits, GST compliance, income tax consulting, and company registration — handled end-to-end. WhatsApp us for a same-day response.";
+
+// Lucide-style SVG icons for service cards
+const serviceIcons: Record<string, string> = {
+  ShieldCheck: '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>',
+  Building2: '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3H21m-3.75 3H21"/></svg>',
+  ReceiptText: '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>',
+  Calculator: '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V13.5zm0 2.25h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V18zm2.498-6.75h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V13.5zm0 2.25h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V18zm2.504-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zm0 2.25h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V18zm2.498-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zM8.25 6h7.5v2.25h-7.5V6zM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 002.25 2.25h10.5a2.25 2.25 0 002.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0012 2.25z"/></svg>',
+};
+
+// Why choose us items
+const whyChoose = [
+  { icon: '<svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"/></svg>', title: "Qualified CA Firm", desc: "Led by Jerin Kurian, ICAI member." },
+  { icon: '<svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>', title: "Fast Turnaround", desc: "Reply within hours, not days, on WhatsApp." },
+  { icon: '<svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>', title: "Local & Accessible", desc: "Walk-in office in Bangalore." },
+];
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<BaseLayout title={title} description={description}>
+
+  <!-- HERO -->
+  <section class="relative overflow-hidden bg-gradient-to-br from-white via-[var(--color-bg-muted)] to-[var(--color-primary-light)]">
+    <div class="container-site py-16 md:py-20 lg:py-24">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+        <!-- Left: Content -->
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-[var(--color-orange-light)] rounded-full mb-6">
+            <span class="w-2 h-2 rounded-full bg-[var(--color-orange)] animate-pulse"></span>
+            <span class="text-xs font-semibold text-[var(--color-orange)]">ICAI-Registered CA Firm</span>
+          </div>
+          <h1 class="text-3xl md:text-4xl lg:text-5xl xl:text-[3.4rem] font-bold text-[var(--color-text)] leading-tight mb-5">
+            Chartered Accountants You Can Trust — <span class="text-[var(--color-primary)]">In Bangalore.</span>
+          </h1>
+          <p class="text-base md:text-lg text-[var(--color-text-muted)] mb-8 max-w-xl leading-relaxed">
+            Audits, GST, income tax, and company registration — handled end-to-end by a qualified CA firm in Bangalore.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-3 mb-8">
+            <WhatsAppCTA message="Hello, I need your services" label="Talk to a CA on WhatsApp" />
+            <a href="#services" class="inline-flex items-center justify-center gap-2 px-6 py-3 font-semibold rounded-full border-2 border-[var(--color-primary)] text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition-all duration-200 text-base">
+              Explore Services
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </a>
+          </div>
+          <!-- Trust strip -->
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs md:text-sm text-[var(--color-text-muted)]">
+            <span class="flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-[var(--color-accent)]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+              ICAI-registered
+            </span>
+            <span class="text-[var(--color-border)]">·</span>
+            <span class="flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-[var(--color-accent)]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+              Bangalore, Karnataka
+            </span>
+            <span class="text-[var(--color-border)]">·</span>
+            <span class="flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-[var(--color-accent)]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+              Same-day response on WhatsApp
+            </span>
+          </div>
+        </div>
+        <!-- Right: Hero Image -->
+        <div class="hidden lg:block">
+          <div class="relative flex justify-center items-center">
+            <img
+              src="/images/hero/hero-illustration-transparent.png"
+              alt="Professional accounting workspace with financial documents and charts"
+              class="relative w-full h-auto max-w-lg object-contain drop-shadow-2xl hover:-translate-y-2 transition-transform duration-500"
+              width="600"
+              height="400"
+              loading="eager"
+              fetchpriority="high"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Decorative elements -->
+    <div class="absolute top-0 right-0 w-1/2 h-full opacity-[0.03] pointer-events-none">
+      <svg viewBox="0 0 400 600" fill="none" class="w-full h-full">
+        <circle cx="300" cy="100" r="200" fill="var(--color-primary)"/>
+        <circle cx="350" cy="400" r="150" fill="var(--color-orange)"/>
+        <circle cx="100" cy="500" r="100" fill="var(--color-accent)"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- SERVICES GRID -->
+  <section id="services" class="section-padding bg-white">
+    <div class="container-site">
+      <div class="text-center mb-10 lg:mb-14">
+        <span class="inline-block px-3 py-1 bg-[var(--color-primary-light)] text-[var(--color-primary)] text-xs font-bold uppercase tracking-wider rounded-full mb-3">What We Offer</span>
+        <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-[var(--color-text)] mb-3">Our Services</h2>
+        <p class="text-[var(--color-text-muted)] max-w-xl mx-auto">Comprehensive financial and legal services tailored for individuals and businesses in Bangalore.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6">
+        {SERVICES.map((service) => (
+          <ServiceCard
+            title={service.title}
+            description={service.shortDescription}
+            href={`/services/${service.slug}/`}
+            icon={serviceIcons[service.icon] || ""}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY CHOOSE US -->
+  <section class="section-padding bg-[var(--color-bg-muted)]">
+    <div class="container-site">
+      <div class="text-center mb-10 lg:mb-14">
+        <span class="inline-block px-3 py-1 bg-[var(--color-orange-light)] text-[var(--color-orange)] text-xs font-bold uppercase tracking-wider rounded-full mb-3">Why Us</span>
+        <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-[var(--color-text)] mb-3">Why Choose Us</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
+        {whyChoose.map((item) => (
+          <div class="text-center bg-white rounded-2xl p-8 shadow-sm border border-[var(--color-border)] hover:shadow-md transition-shadow">
+            <div class="w-14 h-14 rounded-2xl bg-[var(--color-primary-light)] flex items-center justify-center mx-auto mb-4 text-[var(--color-primary)]">
+              <Fragment set:html={item.icon} />
+            </div>
+            <h3 class="text-lg font-bold text-[var(--color-text)] mb-2">{item.title}</h3>
+            <p class="text-sm text-[var(--color-text-muted)]">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT TEASER -->
+  <section class="section-padding bg-white">
+    <div class="container-site">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+        <!-- Left: Image -->
+        <div class="order-2 lg:order-1">
+          <div class="relative">
+            <div class="absolute -inset-3 bg-gradient-to-tr from-[var(--color-primary)]/10 to-[var(--color-accent)]/10 rounded-3xl blur-xl"></div>
+            <img
+              src="/images/about/office.png"
+              alt="Professional chartered accountancy office"
+              class="relative rounded-2xl shadow-xl w-full h-auto"
+              width="560"
+              height="400"
+              loading="lazy"
+            />
+          </div>
+        </div>
+        <!-- Right: Content -->
+        <div class="order-1 lg:order-2">
+          <span class="inline-block px-3 py-1 bg-[var(--color-primary-light)] text-[var(--color-primary)] text-xs font-bold uppercase tracking-wider rounded-full mb-4">About Us</span>
+          <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-[var(--color-text)] mb-6">About Our Firm</h2>
+          <p class="text-[var(--color-text-muted)] mb-4 leading-relaxed">
+            Jerin Kurian & Associates is a Bangalore-based Chartered Accountancy firm providing comprehensive audit, tax, and advisory services. Our practice is built on a commitment to accuracy, transparency, and timely delivery.
+          </p>
+          <p class="text-[var(--color-text-muted)] mb-8 leading-relaxed">
+            Whether you're a startup needing company registration, an SME managing GST compliance, or an individual planning your taxes — we bring qualified expertise and personal attention to every engagement.
+          </p>
+          <a href="/about/" class="inline-flex items-center gap-1.5 text-[var(--color-primary)] font-semibold hover:text-[var(--color-primary-dark)] transition-colors group">
+            Read more about us
+            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOCATION PREVIEW -->
+  <section class="section-padding bg-[var(--color-bg-muted)]">
+    <div class="container-site">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+        <!-- Left: Info -->
+        <div>
+          <span class="inline-block px-3 py-1 bg-[var(--color-primary-light)] text-[var(--color-primary)] text-xs font-bold uppercase tracking-wider rounded-full mb-4">Our Location</span>
+          <h2 class="text-2xl md:text-3xl font-bold text-[var(--color-text)] mb-6">Visit Our Office</h2>
+          <div class="space-y-4 mb-8">
+            <div class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-[var(--color-primary)] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+              <p class="text-[var(--color-text-muted)] text-sm leading-relaxed">{BUSINESS.address.full}</p>
+            </div>
+            <div class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-[var(--color-primary)] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <p class="text-[var(--color-text-muted)] text-sm">{BUSINESS.hours.display}</p>
+            </div>
+            <div class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-[var(--color-primary)] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
+              <a href={BUSINESS.phone.tel} class="text-[var(--color-primary)] font-medium text-sm hover:text-[var(--color-primary-dark)] transition-colors">{BUSINESS.phone.display}</a>
+            </div>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <WhatsAppCTA message="Hello, I need your services" label="WhatsApp Us" />
+            <a href={BUSINESS.urls.googleMaps} target="_blank" rel="noopener" class="inline-flex items-center justify-center gap-2 px-5 py-3 font-semibold rounded-full border-2 border-[var(--color-border)] text-[var(--color-text-muted)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-all text-sm">
+              Get Directions
+            </a>
+          </div>
+        </div>
+        <!-- Right: Map -->
+        <div>
+          <MapEmbed />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA BAND -->
+  <CTABand />
+
+</BaseLayout>

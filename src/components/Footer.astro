@@ -1,0 +1,63 @@
+---
+import { BUSINESS } from "../lib/business";
+import { waLink } from "../lib/whatsapp";
+
+const currentYear = new Date().getFullYear();
+const whatsappUrl = waLink();
+
+const serviceLinks = [
+  { label: "Auditing & Assurance", href: "/services/auditing-and-assurance/" },
+  { label: "Company Registration", href: "/services/company-registration/" },
+  { label: "GST Compliance", href: "/services/gst-compliance/" },
+  { label: "Income Tax Consulting", href: "/services/income-tax-consulting/" },
+];
+---
+
+<footer class="bg-[var(--color-primary-dark)] text-white">
+  <div class="container-site section-padding">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-12">
+      <!-- Firm Block -->
+      <div>
+        <div class="flex items-center gap-2.5 mb-4">
+          <img src="/images/ca-india-logo.png" alt="CA India" class="h-10 w-auto rounded bg-white p-1" width="40" height="40" />
+          <div>
+            <div class="text-lg font-bold leading-tight">{BUSINESS.name}</div>
+            <div class="text-sm font-medium text-[#55B848] leading-tight">{BUSINESS.tagline}</div>
+          </div>
+        </div>
+        <p class="text-sm text-white/70 mb-3">Comprehensive financial and legal services for individuals and businesses in Bangalore.</p>
+        <p class="text-xs text-white/50">{BUSINESS.icai.mention}</p>
+      </div>
+      <!-- Quick Links -->
+      <div>
+        <h3 class="text-sm font-bold uppercase tracking-wider text-white/80 mb-4">Quick Links</h3>
+        <div class="grid grid-cols-2 gap-x-4 gap-y-2">
+          <a href="/" class="text-sm text-white/70 hover:text-white transition-colors">Home</a>
+          <a href="/about/" class="text-sm text-white/70 hover:text-white transition-colors">About</a>
+          <a href="/services/" class="text-sm text-white/70 hover:text-white transition-colors">Services</a>
+          <a href="/contact/" class="text-sm text-white/70 hover:text-white transition-colors">Contact</a>
+          {serviceLinks.map((l) => <a href={l.href} class="text-sm text-white/70 hover:text-white transition-colors">{l.label}</a>)}
+          <a href="/privacy-policy/" class="text-sm text-white/70 hover:text-white transition-colors">Privacy</a>
+          <a href="/terms/" class="text-sm text-white/70 hover:text-white transition-colors">Terms</a>
+        </div>
+      </div>
+      <!-- Contact -->
+      <div>
+        <h3 class="text-sm font-bold uppercase tracking-wider text-white/80 mb-4">Contact Us</h3>
+        <div class="space-y-3 text-sm">
+          <p class="text-white/70 leading-relaxed">{BUSINESS.address.full}</p>
+          <a href={whatsappUrl} target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-[#55B848] hover:text-white transition-colors font-medium">
+            📱 {BUSINESS.phone.display}
+          </a>
+          <a href={BUSINESS.urls.googleMaps} target="_blank" rel="noopener" class="block text-white/70 hover:text-white transition-colors">📍 Open in Google Maps</a>
+          <p class="text-white/50 text-xs">{BUSINESS.hours.display}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="border-t border-white/10">
+    <div class="container-site py-4 text-center text-xs text-white/40">
+      &copy; {currentYear} {BUSINESS.name}. All rights reserved.
+    </div>
+  </div>
+</footer>

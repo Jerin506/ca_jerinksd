@@ -1,0 +1,12 @@
+---
+import ServiceDetailPage from "../../components/ServiceDetailPage.astro";
+import { getServiceBySlug } from "../../lib/services";
+
+const service = getServiceBySlug("auditing-and-assurance")!;
+---
+
+<ServiceDetailPage
+  service={service}
+  seoTitle="Audit & Assurance Services in Bangalore | Jerin Kurian & Associates"
+  seoDescription="Statutory, internal, and tax audits by an ICAI-registered CA firm in Bangalore. GST audits, stock audits, and risk-based assurance reviews."
+/>

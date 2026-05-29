@@ -1,0 +1,12 @@
+---
+import ServiceDetailPage from "../../components/ServiceDetailPage.astro";
+import { getServiceBySlug } from "../../lib/services";
+
+const service = getServiceBySlug("gst-compliance")!;
+---
+
+<ServiceDetailPage
+  service={service}
+  seoTitle="GST Compliance & Advisory in Bangalore — Registration, Filing, ITC"
+  seoDescription="GST registration, monthly GSTR filing, ITC optimization, and notice handling by ICAI-registered CA firm in Bangalore."
+/>
