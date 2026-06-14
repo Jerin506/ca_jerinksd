@@ -24,10 +24,11 @@ export const BUSINESS = {
     longitude: 77.61456477507332,
   },
 
-  // Contact — TODO: Owner to confirm phone number before launch
+  // Contact
   phone: {
-    display: "+91 91645 57027",
-    tel: "tel:+919164557027",
+    display: "+91 78925 77597",
+    tel: "tel:+917892577597",
+    whatsappDisplay: "+91 91645 57027",
     whatsapp: "919164557027",
   },
 
